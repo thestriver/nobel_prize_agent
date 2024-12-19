@@ -105,7 +105,7 @@ You can make changes to the configs in the ```configs``` folder. For example:
 
 **MODEL**: If you would like to use a different model, you can change the ```llm_config['config_name']``` in the ```agent_deployments.json``` file (the ```config_name``` must match the ```config_name``` in the ```llm_configs.json``` file). If using OpenAI, make sure to set the ```OPENAI_API_KEY``` environment variable.
 
-**PERSONA**: If you would like to use a different persona, you can change the ```persona_module['url']``` in the ```agent_deployments.json``` file (the ```url``` must point to a valid Hugging Face dataset).
+**PERSONA**: If you would like to use a different persona, you can change the ```persona_module['module_url']``` in the ```agent_deployments.json``` file (the ```module_url``` must point to a valid Hugging Face dataset).
 
 ## 🧪 Testing the Module
 
@@ -123,7 +123,7 @@ You can run the module using:
 poetry run python <module_name>/run.py
 ```
 
-Now you can iterate on the module and commit your changes. When ready, you can push to your GitHub account or IPFS (or both). Make sure to change the remote origin. Also add a new version number using e.g.:
+Now you can iterate on the module and commit your changes. When ready, you can push to your GitHub account or IPFS (or both). Make sure to change the remote origin. Also add a new module version number using e.g.:
 
 ```bash
 git tag v0.1
