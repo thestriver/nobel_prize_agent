@@ -1,6 +1,6 @@
 # Naptha Module Template
 
-This is a base module template for creating agent, agent orchestrator, environment and tool modules. You can check out other examples of agent, orchestrator, environment and tool modules using the CLI commands with the [Naptha SDK](https://github.com/NapthaAI/naptha-sdk). 
+This is a base module template for creating agent, tool, agent orchestrator, environment, knowledge base and memory modules. You can check out other examples of modules using the CLI commands with the [Naptha SDK](https://github.com/NapthaAI/naptha-sdk). 
 
 - [Naptha Module Template](#naptha-module-template)
   - [🧩 What are Naptha Modules](#-what-are-naptha-modules)
@@ -24,9 +24,11 @@ This is a base module template for creating agent, agent orchestrator, environme
 Naptha Modules are the building blocks of multi-agent applications, which enable them to run across multiple nodes. There are currently five types of Modules:
 
 - **Agent Modules:** Things like Chat Agents, Task-solving Agents, ReAct Agents, etc.
+- **Tool Modules:** Things like Web Search, Python Code Execution, etc.
 - **Agent Orchestrator Modules:** Things like Organizations of Coding Agents, Social Simulations, etc.
 - **Environment Modules:** Things like Group Chats (like WhatsApp for Agents), Information Board (Reddit for Agents), Auctions (eBay for Agents), etc.
-- **Tool Modules:** Things like Web Search, Python Code Execution, etc.
+- **Knowledge Base Modules:** Things like Wikipedia, GitHub, etc.
+- **Memory Modules:** Things like Chat History, Task History, etc.
 - **Persona Modules:** Things like Social Personas generated from exported Twitter data, or synthetically-generated Market Personas
 
 Modules are stored on GitHub, HuggingFace, IPFS, or DockerHub with the URL registered on the Naptha Hub. If you're familiar with Kubeflow Pipelines, Modules are a bit like Components. Modules are based on Poetry Python packages, with some additions like schemas, configs, and an entrypoint. A typical Module has the following structure:
@@ -36,10 +38,9 @@ Modules are stored on GitHub, HuggingFace, IPFS, or DockerHub with the URL regis
   - my_module/
     - __init__.py
     - configs/
-      - agent_deployments.json
+      - deployment.json
       - environment_deployments.json
       - llm_configs.json
-      - orchestrator_configs.json
     - run.py
     - schemas.py
   - tests/
@@ -101,11 +102,11 @@ The main place to make changes to the code is in the ```run.py``` file. This is 
 
 #### Making Changes to the Configs
 
-You can make changes to the configs in the ```configs``` folder. For example:
+You can make changes to the configs in the ```configs``` folder. The ```deployment.json``` file is the main config file for the module. You may also have other config files for subdeployments (e.g. ```environment_deployments.json```). For example:
 
-**MODEL**: If you would like to use a different model, you can change the ```llm_config['config_name']``` in the ```agent_deployments.json``` file (the ```config_name``` must match the ```config_name``` in the ```llm_configs.json``` file). If using OpenAI, make sure to set the ```OPENAI_API_KEY``` environment variable.
+**MODEL**: If you would like to use a different model, you can change the ```llm_config['config_name']``` in the ```deployment.json``` file (the ```config_name``` must match the ```config_name``` in the ```llm_configs.json``` file). If using OpenAI, make sure to set the ```OPENAI_API_KEY``` environment variable.
 
-**PERSONA**: If you would like to use a different persona, you can change the ```persona_module['module_url']``` in the ```agent_deployments.json``` file (the ```module_url``` must point to a valid Hugging Face dataset).
+**PERSONA**: If you would like to use a different persona, you can add ```persona_module['module_url']``` in the config dict of ```deployments.json``` file (the ```module_url``` must point to a valid Hugging Face dataset).
 
 ## 🧪 Testing the Module
 
