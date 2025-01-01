@@ -25,20 +25,23 @@ def run(module_run):
     return method(module_run.inputs.func_input_data)
 
 if __name__ == "__main__":
-    # For testing locally
+    import asyncio
     from naptha_sdk.client.naptha import Naptha
-    from naptha_sdk.configs import load_agent_deployments
+    from naptha_sdk.configs import setup_module_deployment
+    import os
 
     naptha = Naptha()
 
-    input_params = InputSchema(func_name="func", func_input_data="gm...")
+    deployment = asyncio.run(setup_module_deployment("agent", "module_template/configs/deployment.json", node_url = os.getenv("NODE_URL")))
 
-    # Load Configs
-    agent_deployments = load_agent_deployments("module_template/configs/deployment.json")
+    input_params = InputSchema(
+        func_name="func",
+        func_input_data="gm...",
+    )
 
     module_run = AgentRunInput(
         inputs=input_params,
-        deployment=agent_deployments[0],
+        deployment=deployment,
         consumer_id=naptha.user.id,
     )
 
