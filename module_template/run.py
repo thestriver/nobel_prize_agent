@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 from dotenv import load_dotenv
-from naptha_sdk.schemas import AgentRunInput, OrchestratorRunInput, EnvironmentRunInput
+from naptha_sdk.schemas import AgentRunInput
 from naptha_sdk.utils import get_logger
 from module_template.schemas import InputSchema
-from typing import Union
 
 load_dotenv()
 
