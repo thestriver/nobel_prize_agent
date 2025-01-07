@@ -156,19 +156,27 @@ To store on GitHub, you can use:
 git push --tags
 ```
 
-Make sure the module field in your deployment.json file has a ```module_type``` field:
+Before registering on the Naptha Hub, make sure the module field in your deployment.json file has a ```name```, ```description```, ```parameters```, ```module_type```, ```module_version```, ```module_entrypoint```, and ```execution_type``` fields:
 
  ```
  [
     {
       ...
-      "module": {"name": "module_template", "module_type": "agent"},
+        "module": {
+            "name": "module_template",
+            "description": "Module Template",
+            "parameters": "{tool_name: str, tool_input_data: str}",
+            "module_type": "agent",
+            "module_version": "v0.1",
+            "module_entrypoint": "run.py",
+            "execution_type": "package"
+        },
       ...
     }
  ]
  ```
 
-Then, you can register the module from a GitHub url by adding your specific repo url with the ```-r``` flag:
+You can register the module from a GitHub url by adding your specific repo url with the ```-r``` flag:
 
 ```bash
 naptha publish -r https://github.com/NapthaAI/module_template
@@ -180,11 +188,51 @@ Alternatively, you can store the module on IPFS and register on the Naptha Hub b
 naptha publish -r
 ```
 
-
-
 If successful, you will an output with the IPFS hash, and a link where you can test download via the browser http://provider.akash.pro:30584/ipfs/<ipfs_hash>.
 
-You can double check the module is registered on the Hub by running:
+If you would also like to publish subdeployments, you can use:
+
+```bash
+naptha publish -r -s
+```
+
+Make sure to add a list of dicts with a ```name``` field to one or more of the ```agent_deployments```, ```tool_deployments```, ```environment_deployments```, ```kb_deployments```, or ```memory_deployments``` fields in your deployment.json file:
+
+ ```
+ [
+    {
+      ...
+        "agent_deployments": [{"name": "agent_deployment_1"}],
+        "tool_deployments": [{"name": "tool_deployment_1"}],
+        "environment_deployments": [{"name": "environment_deployment_1"}],
+        "kb_deployments": [{"name": "kb_deployment_1"}],
+        "memory_deployments": [{"name": "memory_deployment_1"}],
+      ...
+    }
+ ]
+ ```
+
+And also add corresponding ```agent_deployments.json```, ```tool_deployments.json```, ```environment_deployments.json```, ```kb_deployments.json```, or ```memory_deployments.json``` files to the ```configs``` folder for each subdeployment. In each file, there should be a module field with a ```name```, ```description```, ```parameters```, ```module_type```, ```module_version```, ```module_entrypoint```, and ```execution_type``` fields:
+
+ ```
+ [
+    {
+      ...
+        "module": {
+            "name": "subdeployment_module",
+            "description": "Subdeployment Module",
+            "parameters": "{tool_name: str, tool_input_data: str}",
+            "module_type": "tool",
+            "module_version": "v0.1",
+            "module_entrypoint": "run.py",
+            "execution_type": "package"
+        },
+      ...
+    }
+ ]
+ ```
+
+You can confirm that the modules were registered on the Hub by running:
 
 ```bash
 naptha agents
