@@ -132,15 +132,7 @@ You can run the module using:
 poetry run python <module_name>/run.py
 ```
 
-Now you can iterate on the module and commit your changes. When ready, you can push to your GitHub account or IPFS (or both). Make sure to change the remote origin. Also add a new module version number using e.g.:
-
-```bash
-git tag v0.1
-```
-
-```bash
-git push --tags
-```
+Now you can iterate on the module and commit your changes.
 
 ### 🌐 Test the Module on a Local Node (with a Local Hub)
 
@@ -149,31 +141,58 @@ For this step, you will need to:
 1. Run your own Naptha Node and Hub. Follow the instructions [here](https://github.com/NapthaAI/node) (still private, please reach out if you'd like access) to run your own Naptha Node and Hub. To run a local Hub, set ```LOCAL_HUB=True``` in the .env file for the NapthaAI/node repository.
 2. Install the Naptha SDK using the [instructions here](https://github.com/NapthaAI/naptha-sdk). To use the SDK with your local node and hub, set ```NODE_URL=http://localhost:7001``` and ```HUB_URL=ws://localhost:3001/rpc``` in the .env file for the NapthaAI/naptha-sdk repository.
 
-#### Register the new or updated Module on a local Hub
-
-If creating an agent module, you can register it on the Hub using:
-
-```bash
-naptha agents agent_name -p "description='Agent description' parameters='{tool_name: str, tool_input_data: str}' module_url='ipfs://QmNer9SRKmJPv4Ae3vdVYo6eFjPcyJ8uZ2rRSYd3koT6jg'" 
-```
-
-If creating an orchestrator module, you can register it on the Hub using:
-
-```bash
-naptha orchestrators orchestrator_name -p "description='Orchestrator description' parameters='{input_parameter_1: str, input_parameter_2: int}' module_url='ipfs://QmNer9SRKmJPv4Ae3vdVYo6eFjPcyJ8uZ2rRSYd3koT6jg'" 
-```
-
-If creating an environment module, you can register it on the Hub using:
-
-```bash
-naptha environments environment_name -p "description='Environment description' parameters='{input_parameter_1: str, input_parameter_2: int}' module_url='ipfs://QmNer9SRKmJPv4Ae3vdVYo6eFjPcyJ8uZ2rRSYd3koT6jg'" 
-```
-
-Make sure to replace the placeholder descriptions and URLs with your own. To check that the module is registered correctly, you can run ```naptha agents```, ```naptha orchestrators```, or ```naptha environments```.
 
 #### Running the Module on a local Naptha Node
 
-Once the module is registered on the Hub, you can run it on a local Naptha Node using the Naptha SDK:
+First, you can push the module to your GitHub or IPFS (or both). If using GitHub, make sure to change the remote origin. Also add a new module version number using e.g.:
+
+```bash
+git tag v0.1
+```
+
+To store on GitHub, you can use:
+
+```bash
+git push --tags
+```
+
+Make sure the module field in your deployment.json file has a ```module_type``` field:
+
+ ```
+ [
+    {
+      ...
+      "module": {"name": "module_template", "module_type": "agent"},
+      ...
+    }
+ ]
+ ```
+
+Then, you can register the module from a GitHub url by adding your specific repo url with the ```-r``` flag:
+
+```bash
+naptha publish -r https://github.com/NapthaAI/module_template
+```
+
+Alternatively, you can store the module on IPFS and register on the Naptha Hub by running:
+
+```bash
+naptha publish -r
+```
+
+
+
+If successful, you will an output with the IPFS hash, and a link where you can test download via the browser http://provider.akash.pro:30584/ipfs/<ipfs_hash>.
+
+You can double check the module is registered on the Hub by running:
+
+```bash
+naptha agents
+```
+
+Or the equivalent command for the module type you are using (e.g. ```naptha tools```, ```naptha orchestrators```, ```naptha environments```, ```naptha kbs```, ```naptha memories```, ```naptha personas```).
+
+Once the module is published, you can run it on a local Naptha Node using the Naptha SDK:
 
 ```bash
 naptha run agent:module_template -p "func_name='func', func_input_data='gm...'" 
