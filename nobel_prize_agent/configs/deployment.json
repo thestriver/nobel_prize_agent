@@ -1,0 +1,19 @@
+[
+  {
+    "name": "agent_deployment_1",
+    "module": { "name": "nobel_prize_agent" },
+    "node": { "ip": "localhost" },
+    "config": {
+      "config_name": "config_1",
+      "llm_config": { "config_name": "model_1" },
+      "system_prompt": {
+        "role": "You are an AI assistant specialized in Nobel Prize history and laureates. Your role is to provide accurate information about Nobel Prize winners, their achievements, and the significance of their work."
+      }
+    },
+    "kb_deployments": [
+      {
+        "name": "kb_deployment_1"
+      }
+    ]
+  }
+]

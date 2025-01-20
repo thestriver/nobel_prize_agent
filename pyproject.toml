@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "module-template"
+name = "nobel-prize-agent"
 version = "0.1.0"
-description = ""
-authors = ["Richard Blythman <richardblythman@gmail.com>"]
+description = "An agent that can answer questions about Nobel Prize winners"
+authors = ["Dean <dean@aidevmode.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
