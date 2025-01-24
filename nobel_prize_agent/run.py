@@ -6,6 +6,7 @@ from naptha_sdk.modules.kb import KnowledgeBase
 from naptha_sdk.inference import InferenceClient
 from naptha_sdk.schemas import AgentDeployment, AgentRunInput, KBRunInput
 from nobel_prize_agent.schemas import InputSchema, SystemPromptSchema
+from naptha_sdk.user import sign_consumer_id
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -18,14 +19,24 @@ class NobelPrizeAgent:
         self.inference_provider = InferenceClient(self.deployment.node)
 
     async def run_nobel_agent(self, module_run: AgentRunInput):
-        # Query the Nobel Prize KB
+        logger.info("Checking if knowledge base exists")
+
+        # First make sure Nobel Prize KB exists
         kb_run_input = KBRunInput(
             consumer_id=module_run.consumer_id,
-            inputs={
-                "function_name": "run_query",
-                "function_input_data": {"query": module_run.inputs.query}
-            },
-            deployment=self.deployment.kb_deployments[0].model_dump(),
+            inputs={"func_name": "init", "func_input_data": None},
+            deployment=self.deployment.kb_deployments[0],
+            signature=sign_consumer_id(module_run.consumer_id, os.getenv("PRIVATE_KEY"))
+        )
+        result = await self.nobel_kb.call_kb_func(kb_run_input)
+        logger.info(f"KB run result: {result}")
+
+        # # Now run the query
+        kb_run_input = KBRunInput(
+            consumer_id=module_run.consumer_id,
+            inputs={"func_name": "run_query", "func_input_data": {"query": module_run.inputs.query}},
+            deployment=self.deployment.kb_deployments[0],
+            signature=sign_consumer_id(module_run.consumer_id, os.getenv("PRIVATE_KEY"))
         )
         
         laureate_info = await self.nobel_kb.call_kb_func(kb_run_input)
@@ -62,7 +73,7 @@ class NobelPrizeAgent:
             "max_tokens": self.deployment.config.llm_config.max_tokens
         })
 
-        return llm_response
+        return llm_response.choices[0].message.content
 
 async def run(module_run: Dict, *args, **kwargs):
     module_run = AgentRunInput(**module_run)
@@ -99,6 +110,7 @@ if __name__ == "__main__":
         "inputs": input_params,
         "deployment": deployment,
         "consumer_id": naptha.user.id,
+        "signature": sign_consumer_id(naptha.user.id, os.getenv("PRIVATE_KEY"))
     }
 
     response = asyncio.run(run(module_run))
