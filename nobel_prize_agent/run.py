@@ -102,7 +102,7 @@ if __name__ == "__main__":
         user_id=naptha.user.id
     ))
 
-    # Example query for Geoffrey Hinton
+    # Example query
     query = "Hinton"
     question = "What did Geoffrey Hinton win the Nobel Prize for and what is the significance of his work?"
 
