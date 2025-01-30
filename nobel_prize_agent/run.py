@@ -24,17 +24,23 @@ class NobelPrizeAgent:
         # First make sure Nobel Prize KB exists
         kb_run_input = KBRunInput(
             consumer_id=module_run.consumer_id,
-            inputs={"func_name": "init", "func_input_data": None},
+            inputs={
+                "func_name": "init",
+                "func_input_data": None
+            },
             deployment=self.deployment.kb_deployments[0],
             signature=sign_consumer_id(module_run.consumer_id, os.getenv("PRIVATE_KEY"))
         )
         result = await self.nobel_kb.call_kb_func(kb_run_input)
         logger.info(f"KB run result: {result}")
 
-        # # Now run the query
+        # Now run the query
         kb_run_input = KBRunInput(
             consumer_id=module_run.consumer_id,
-            inputs={"func_name": "run_query", "func_input_data": {"query": module_run.inputs.query}},
+            inputs={
+                "func_name": "run_query",
+                "func_input_data": {"query": module_run.inputs.query}
+            },
             deployment=self.deployment.kb_deployments[0],
             signature=sign_consumer_id(module_run.consumer_id, os.getenv("PRIVATE_KEY"))
         )
@@ -101,7 +107,7 @@ if __name__ == "__main__":
     question = "What did Geoffrey Hinton win the Nobel Prize for and what is the significance of his work?"
 
     input_params = {
-        "function_name": "run_query",
+        "func_name": "run_query",
         "query": query,
         "question": question,
     }

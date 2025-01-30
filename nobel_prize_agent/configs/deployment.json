@@ -1,10 +1,18 @@
 [
   {
     "name": "agent_deployment_1",
-    "module": { "name": "nobel_prize_agent" },
-    "node": { "ip": "localhost" },
+    "module": {
+      "name": "nobel_prize_agent",
+      "description": "Nobel Prize Agent Module",
+      "parameters": "{func_name: str, query: str, question: str}",
+      "module_type": "agent",
+      "module_version": "v0.1",
+      "module_entrypoint": "run.py",
+      "execution_type": "package"
+    },
+    "node": { "ip": "node.naptha.ai" },
     "config": {
-      "config_name": "config_1",
+      "config_name": "agent_config_1",
       "llm_config": { "config_name": "model_1" },
       "system_prompt": {
         "role": "You are an AI assistant specialized in Nobel Prize history and laureates. Your role is to provide accurate information about Nobel Prize winners, their achievements, and the significance of their work."
